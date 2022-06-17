@@ -35,7 +35,6 @@ def reserveview(request):
             )      
             reserve.save()
             return redirect("/hotelxyz/myreservations")
-            # print('saved................')
 
         return render(request, "reserving/reservepage.html")
 
@@ -67,11 +66,10 @@ def createuser(request):
         username = request.POST["username"]
         password = request.POST['password']
         password2 = request.POST['password2']
-        # email = request.POST['email']
-
+      
         if password == password2:
             new_user = User.objects.create_user(
-                # email=email,
+                
                 username=username,
                 password=password,
             )
@@ -105,7 +103,7 @@ def myreservations(request):
     elif not request.user.is_authenticated:
         return redirect("/hotelxyz/login/")
 
-    # print(username)
+    
 
 
 
