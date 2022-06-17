@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    {% comment %} <p>{{reservations.Client}}</p> {% endcomment %}
+    <p>Dear {{username.capitalize}}, you have {{it}} reservations: </p>
+
+    {% for clients in reservations %}
+    <p>You booked a reservation with hotel room {{clients.Room_number}}. You intend on staying 
+    for {{clients.Nights_of_stay}} days starting from {{clients.Starting_date}} and ending on {{clients.Ending_date}}.. Please do well to check in 
+    ontime. Your reservation name is {{clients.First_name.capitalize}} {{clients.Last_name.capitalize}}</p>
+
+    {% comment %} <p>{{clients.Email}} {{clients.Occupation}} {{clients.First_name}} {{it}}</p> {% endcomment %}
+    {% endfor %}
+    <br><br>
+    <a href="/hotelxyz/logout/">Logout</a>
+    
+</body>
+</html>
