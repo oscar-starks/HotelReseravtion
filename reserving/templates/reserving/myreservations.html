@@ -7,14 +7,16 @@
     <title>Document</title>
 </head>
 <body>
+    <a href="/hotelxyz/createuser">Create New user</a><br>
+    <a href="/hotelxyz/">new reservations</a><br><br>
     
     {% comment %} <p>{{reservations.Client}}</p> {% endcomment %}
     <p>Dear {{username.capitalize}}, you have {{it}} reservations: </p>
 
     {% for clients in reservations %}
-    <p>You booked a reservation with hotel room {{clients.Room_number}}. You intend on staying 
+    <p>You booked a reservation with hotel room {{clients.Room_number}}. Your client intends on staying 
     for {{clients.Nights_of_stay}} days starting from {{clients.Starting_date}} and ending on {{clients.Ending_date}}.. Please do well to check in 
-    ontime. Your reservation name is {{clients.First_name.capitalize}} {{clients.Last_name.capitalize}}</p>
+    ontime. Your reservation client's name is {{clients.First_name.capitalize}} {{clients.Second_name.capitalize}} {{clients.Last_name.capitalize}}</p>
 
     {% comment %} <p>{{clients.Email}} {{clients.Occupation}} {{clients.First_name}} {{it}}</p> {% endcomment %}
     {% endfor %}
