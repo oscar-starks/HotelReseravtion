@@ -8,53 +8,55 @@
 </head>
 <body>
     <a href="/hotelxyz/myreservations/">My Reservations</a><br><br>
-    <a href="/hotelxyz/update">Make an update</a><br><br>
     <a href="/hotelxyz/createuser">Create New user</a><br>
-<form action="" method="POST">
+
+    <br><h1> Updating</h1>
+<form action="/hotelxyz/updating/" method="POST">
         {% csrf_token %}
     <label for="fname">First Name</label><br>
-    <input type="text" name="fname" id="fname" required>
+    <input type="text" name="fname" id="fname" value = '{{res.First_name.capitalize}}' required>
     
     <div>
         <label for="sname">Second Name</label><br>
-        <input type="text" name="sname" id="sname" required>
+        <input type="text" name="sname" id="sname" value = '{{res.Second_name.capitalize}}' required>
     </div>
     
     <div>
         <label for="lname">Last Name</label><br>
-        <input type="text" name="lname" id="lname" required>
+        <input type="text" name="lname" id="lname" value = "{{ res.Last_name }}" required>
     </div>
     
     <div>
         <label for="roomnumber">Room Number</label><br>
-        <input type="number" name="roomnumber" id="roomnumber" required>
+        <input type="number" name="roomnumber" id="roomnumber" value = "{{res.Room_number}}" required>
     </div>
     
     <div>
         <label for="amountpaid">Amount Paid(N)</label><br>
-        <input type="number" name="amountpaid" id="amountpaid"required>
+        <input type="number" name="amountpaid" id="amountpaid" value = "{{res.Amount_paid}}" required>
     </div>
 
     <label for="email">Email</label><br>
-    <input type="email" name="email" id="email" required>
+    <input type="email" name="email" id="email" value = "{{res.Email}}" required>
     <br><br>
 
     <label for="occupation">Occupation</label><br>
-    <input type="text" name="occupation" id="occupation" required>
+    <input type="text" name="occupation" id="occupation" value = "{{res.Occupation}}" required>
     <br><br>
 
     <label for="Reservation" >How many nights will you be staying:</label><br>
-    <input type="number" name="Reservation" id="Reservation" required>
+    <input type="number" name="Reservation" id="Reservation" value = "{{res.Nights_of_stay}}" required>
     <br><br>
 
     <label for="startdate">When will you be starting:</label><br>
-    <input type="date" name="startdate" id="startdate" required>
+    <input type="date" name="startdate" id="startdate" value = "{{res.Starting_date}}" required>
     <br><br>
 
     <label for="enddate">When will you be leaving:</label><br>
-    <input type="date" name="enddate" id="enddate" required> 
-    <br>
-    <button type="submit">Submit</button>
+    <input type="date" name="enddate" id="enddate" value = "{{res.Ending_date}}" required> 
+    <br><br>
+    <input type="hidden" name="id" value = "{{res.id}}"><br><br>
+    <button type="submit">Update</button>
     <br><br>
     <a href="logout/">Logout</a>
     

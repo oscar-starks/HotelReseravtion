@@ -1,9 +1,9 @@
-from multiprocessing import context
-from multiprocessing.connection import Client
 from django.shortcuts import redirect, render
 from .models import Reservations
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+
 
 # Create your views here.
 def reserveview(request):
@@ -36,10 +36,11 @@ def reserveview(request):
             reserve.save()
             return redirect("/hotelxyz/myreservations")
 
-        return render(request, "reserving/reservepage.html")
-
     elif not request.user.is_authenticated:
         return redirect("/hotelxyz/login/")
+
+
+    return render(request, "reserving/reservepage.html")
 
 def loginview(request):
     username = request.POST.get('username')
@@ -103,13 +104,66 @@ def myreservations(request):
     elif not request.user.is_authenticated:
         return redirect("/hotelxyz/login/")
 
-    
 
+def update(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            fname = request.POST["fname"]
+            sname = request.POST["sname"]
+            lname = request.POST["lname"]
 
+            res = Reservations.objects.get(
+                First_name = fname,
+                Second_name = sname,
+                Last_name = lname
+            )
 
-    
-    # current_user = request.user.id
-    # print(current_user)
-    # print(User.objects.all()[current_user])
+            context = {"res" : res}
+            return render(request, "reserving\edit.html", context)
+    return render(request, "reserving\get.html")
 
-   
+def updating(request):
+    if request.method == "POST":
+        fname = request.POST.get("fname")
+        sname = request.POST.get("sname")
+        lname = request.POST.get("lname")
+        rumno = request.POST.get("roomnumber")
+        amount = request.POST.get("amountpaid")
+        email = request.POST.get("email")
+        occupation = request.POST.get("occupation")
+        res = request.POST.get("Reservation")
+        start = request.POST.get("startdate")
+        end = request.POST.get("enddate") 
+        id = request.POST.get("id")
+
+        Reservations.objects.filter(id = id).update(
+                First_name = fname,
+                Second_name =sname,
+                Last_name = lname,
+                Room_number = rumno,
+                Amount_paid = amount,
+                Email =email,
+                Occupation = occupation,
+                Nights_of_stay = res,
+                Starting_date =start,
+                Ending_date = end,)
+        
+        return redirect("/hotelxyz/")
+
+# def images(request):
+#     if request.METHOD == "POST":
+#         request.FILES["images"]    
+
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['images']:
+        myfile = request.FILES['images']
+        fs = FileSystemStorage()
+        file = fs.save(myfile.name, myfile)
+        file_url = fs.url(file)
+        print(file_url, "          ", myfile.name)
+
+    return render(request, "reserving/pictures.html" )
+        # return render(request, 'core/simple_upload.html', {
+        #     'uploaded_file_url': uploaded_file_url
+        # })
+    # return render(request, 'core/simple_upload.html')
