@@ -21,11 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = "RAvpjpp51w7CdGizj0"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
-
-ALLOWED_HOSTS = ['herokuoscar.herokuapp.com']
+DEBUG = True
+ALLOWED_HOSTS = ['herokuoscar.herokuapp.com', "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -37,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'throttle',
     'reserving',
     'dispose.apps.DisposeConfig'
 ]
@@ -135,3 +135,24 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'boss82413@gmail.com'
 # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_HOST_PASSWORD = 'wgpoocprupqwjaka'
+
+THROTTLE_ZONES = {
+    'default': {
+        'VARY':'throttle.zones.RemoteIP',
+        'NUM_BUCKETS':2,  # Number of buckets worth of history to keep. Must be at least 2
+        'BUCKET_INTERVAL':15 * 60,  # Period of time to enforce limits.
+        'BUCKET_CAPACITY':50,  # Maximum number of requests allowed within BUCKET_INTERVAL
+    },
+}
+
+# Where to store request counts.
+THROTTLE_BACKEND = 'throttle.backends.cache.CacheBackend'
+
+# Optional after Redis backend is chosen ('throttle.backends.redispy.RedisBackend')
+# THROTTLE_REDIS_HOST = 'localhost'
+# THROTTLE_REDIS_PORT = 6379
+# THROTTLE_REDIS_DB = 0
+# THROTTLE_REDIS_AUTH = 'pass'
+
+# Normally, throttling is disabled when DEBUG=True. Use this to force it to enabled.
+THROTTLE_ENABLED = True

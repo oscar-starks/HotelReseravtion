@@ -4,42 +4,39 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 
+from django.contrib.auth.decorators import login_required
+from throttle.decorators import throttle
 
 # Create your views here.
+@login_required(login_url="accounts:login")
 def reserveview(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            fname = request.POST.get("fname")
-            sname = request.POST.get("sname")
-            lname = request.POST.get("lname")
-            rumno = request.POST.get("roomnumber")
-            amount = request.POST.get("amountpaid")
-            email = request.POST.get("email")
-            occupation = request.POST.get("occupation")
-            res = request.POST.get("Reservation")
-            start = request.POST.get("startdate")
-            end = request.POST.get("enddate") 
+    if request.method == "POST":
+        fname = request.POST.get("fname")
+        sname = request.POST.get("sname")
+        lname = request.POST.get("lname")
+        rumno = request.POST.get("roomnumber")
+        amount = request.POST.get("amountpaid")
+        email = request.POST.get("email")
+        occupation = request.POST.get("occupation")
+        res = request.POST.get("Reservation")
+        start = request.POST.get("startdate")
+        end = request.POST.get("enddate") 
 
-            reserve = Reservations(
-                First_name = fname,
-                Second_name =sname,
-                Last_name = lname,
-                Room_number = rumno,
-                Amount_paid = amount,
-                Email =email,
-                Occupation = occupation,
-                Nights_of_stay = res,
-                Starting_date =start,
-                Ending_date = end,
-                Client = request.user
-            )      
-            reserve.save()
-            return redirect("/hotelxyz/myreservations")
-
-    elif not request.user.is_authenticated:
-        return redirect("/hotelxyz/login/")
-
-
+        reserve = Reservations(
+            First_name = fname,
+            Second_name =sname,
+            Last_name = lname,
+            Room_number = rumno,
+            Amount_paid = amount,
+            Email =email,
+            Occupation = occupation,
+            Nights_of_stay = res,
+            Starting_date =start,
+            Ending_date = end,
+            Client = request.user
+        )      
+        reserve.save()
+        return redirect("/hotelxyz/myreservations")
     return render(request, "reserving/reservepage.html")
 
 def loginview(request):
@@ -83,45 +80,40 @@ def createuser(request):
 
     return render(request, "reserving\\register.html")
 
-
+@login_required(login_url="accounts:login")
 def myreservations(request):
-    if request.user.is_authenticated:
-        username = request.user.username
-        current_user = request.user.id
-        res = Reservations.objects.filter(Client = current_user)
-        # All = Reservations.objects.all()
-        num = 0
-        for ress in res:
-            num += 1
+    username = request.user.username
+    current_user = request.user.id
+    res = Reservations.objects.filter(Client = current_user)
+    num = 0
+    for ress in res:
+        num += 1
 
-        context = {
-            'reservations' : res,
-            "it" : num,
-            "username" : username
-        }
-        return render(request, 'reserving\\myreservations.html', context)
-    
-    elif not request.user.is_authenticated:
-        return redirect("/hotelxyz/login/")
+    context = {
+        'reservations' : res,
+        "it" : num,
+        "username" : username
+    }
+    return render(request, 'reserving\\myreservations.html', context)
 
-
+@login_required(login_url="accounts:login")
 def update(request):
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            fname = request.POST["fname"]
-            sname = request.POST["sname"]
-            lname = request.POST["lname"]
+    if request.method == "POST":
+        fname = request.POST["fname"]
+        sname = request.POST["sname"]
+        lname = request.POST["lname"]
 
-            res = Reservations.objects.get(
-                First_name = fname,
-                Second_name = sname,
-                Last_name = lname
-            )
+        res = Reservations.objects.get(
+            First_name = fname,
+            Second_name = sname,
+            Last_name = lname
+        )
 
-            context = {"res" : res}
-            return render(request, "reserving\edit.html", context)
+        context = {"res" : res}
+        return render(request, "reserving\edit.html", context)
     return render(request, "reserving\get.html")
 
+@login_required(login_url="accounts:login")
 def updating(request):
     if request.method == "POST":
         fname = request.POST.get("fname")
@@ -150,10 +142,6 @@ def updating(request):
         
         return redirect("/hotelxyz/")
 
-# def images(request):
-#     if request.METHOD == "POST":
-#         request.FILES["images"]    
-
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['images']:
         myfile = request.FILES['images']
@@ -163,7 +151,3 @@ def simple_upload(request):
         print(file_url, "          ", myfile.name)
 
     return render(request, "reserving/pictures.html" )
-        # return render(request, 'core/simple_upload.html', {
-        #     'uploaded_file_url': uploaded_file_url
-        # })
-    # return render(request, 'core/simple_upload.html')
