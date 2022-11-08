@@ -3,13 +3,15 @@ from .models import Reservations
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-
 from django.contrib.auth.decorators import login_required
 from throttle.decorators import throttle
+import throttle as t
 
 # Create your views here.
 @login_required(login_url="accounts:login")
+@throttle(zone='default')
 def reserveview(request):
+    print(dir(t))
     if request.method == "POST":
         fname = request.POST.get("fname")
         sname = request.POST.get("sname")
@@ -54,12 +56,12 @@ def loginview(request):
 
     return render(request, "reserving\login.html")
 
+@login_required(login_url="accounts:login")
 def logoutview(request):
     logout(request)
     return render(request, "reserving\logout.html")
 
 def createuser(request):
-
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST['password']
