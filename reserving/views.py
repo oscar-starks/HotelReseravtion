@@ -11,7 +11,6 @@ import throttle as t
 @login_required(login_url="accounts:login")
 @throttle(zone='default')
 def reserveview(request):
-    print(dir(t))
     if request.method == "POST":
         fname = request.POST.get("fname")
         sname = request.POST.get("sname")
